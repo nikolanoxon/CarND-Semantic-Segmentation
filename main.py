@@ -7,10 +7,10 @@ from distutils.version import LooseVersion
 import project_tests as tests
 
 # Hyperparameters
-BATCH_SIZE = 1
-EPOCHS = 5
+BATCH_SIZE = 5
+EPOCHS = 60
 KEEP_PROB = 0.5
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.0009
 
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
@@ -128,10 +128,10 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     sess.run(tf.global_variables_initializer())
 
     for epoch in range(epochs):
+        print("EPOCH {} ...".format(epoch+1))
         for image, label in get_batches_fn(batch_size):
             _, loss = sess.run([train_op, cross_entropy_loss], feed_dict={input_image: image, correct_label: label, keep_prob: KEEP_PROB, learning_rate: LEARNING_RATE})
-        print("EPOCH {} ...".format(epoch+1))
-        print("Loss = {:.3f}".format(loss))
+            print("Loss = {:.3f}".format(loss))
         print()
     pass
 tests.test_train_nn(train_nn)
@@ -142,7 +142,7 @@ def run():
     batch_size = BATCH_SIZE
     num_classes = 2
     image_shape = (160, 576)  # KITTI dataset uses 160x576 images
-    data_dir = './data'
+    data_dir = '/data'
     runs_dir = './runs'
     tests.test_for_kitti_dataset(data_dir)
 
@@ -177,7 +177,12 @@ def run():
         helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
 
         # OPTIONAL: Apply the trained model to a video
-
+        
+        # Save trained model
+        model_saver = tf.train.Saver()
+        model_save_path = os.path.join(runs_dir, 'FCN8_weight.ckpt')
+        model_saver.save(sess, model_save_path)
+        print('Model Saved to: {}'.format(model_save_path))
 
 if __name__ == '__main__':
     run()
