@@ -34,6 +34,7 @@ In `main.py`, you'll notice that layers 3, 4 and 7 of VGG16 are utilized in crea
 In section 4.3, and further under header "Skip Architectures for Segmentation" and Figure 3, they note these provided for 8x, 16x and 32x upsampling, respectively. Using each of these in their FCN-8s was the most effective architecture they found. 
 
 ### Results
+Overall my network achieved good results on many different road types ans scenarios. As you can see, the network is able to distinguish between the road and curbs, vehciles, grass, medians, etc. Some areas where the network struggles is in dynamic lighting conditions with strong shadows. This could likely be improved by including additional training data with these kinds of lighting conditions.
 
 Good Results          |  Poor Result
 :-------------------------:|:-------------------------:
@@ -42,14 +43,17 @@ Good Results          |  Poor Result
 ![Good](./examples/umm_000089.png)  |
 
 #### Network Architecture
-Per the class recommendation found [here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/forum_archive/Semantic_Segmentation_advice.pdf) I scaled the incoming pooling layers from the VGG used in the skip levels which improved the inference of the network.
+Per the class recommendation found [here](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/forum_archive/Semantic_Segmentation_advice.pdf) I scaled the incoming pooling layers from the VGG used in the skip levels which improved the inference of the network. Other than that, I followed the network architecture outlined in section 4.2 of [Fully Convolutional Networks for Semantic Segmentation](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf).
 
 #### Hyperparameters
 I trained my network with the following hyperparameters:
 
 Batch Size = 5
+
 Dropout = 0.5
+
 Epochs = 60
+
 Learn Rate = 0.0009
 
 I played around with several different learn rates (0.0001, 0.0005, 0.001) before finally settling on 0.0009. I found after comapring my results to other colleagues that we'd converged on a similar result.
